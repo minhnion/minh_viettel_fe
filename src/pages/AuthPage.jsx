@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { loginApi, registerApi } from '../api/index';
@@ -20,6 +20,14 @@ const AuthPage = () => {
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
+
+  useEffect(() => {
+    // Check if token exists and redirect to home if authenticated
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/');
+    }
+  }, [navigate]);
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
@@ -47,23 +55,25 @@ const AuthPage = () => {
     }
 
     setIsRegisterLoading(true);
-    console.log('Đang thực hiện đăng ký...');
 
     try {
       const userData = {
         fullName: registerUsername,
         email: registerEmail,
         password: registerPassword,
-        confirmPassword: registerConfirmPassword,
       };
       const data = await registerApi(userData);
 
       toast.success('Registration successful! Please check your email to verify your account.');
-      console.log('Đăng ký thành công:', data);
+      console.log('Registration successful:', data);
       navigate('/auth/check-email', { state: { email: registerEmail } });
     } catch (error) {
-      console.error('Đăng ký thất bại:', error);
-      toast.error(error.message || 'Registration failed. Please try again.');
+      console.error('Registration failed:', error);
+      if (error.status === 400) {
+        toast.error(error.message || 'Email already registered. Please use a different email.');
+      } else {
+        toast.error(error.message || 'Registration failed. Please try again.');
+      }
     } finally {
       setIsRegisterLoading(false);
     }
@@ -77,11 +87,22 @@ const AuthPage = () => {
       const credentials = { email: loginEmail, password: loginPassword };
       const data = await loginApi(credentials);
 
-      console.log('Đăng nhập thành công:', data);
-      navigate('/');
+      if (data.access_token) {
+        localStorage.setItem('token', data.access_token); // Store token
+        toast.success('Login successful!');
+        console.log('Login successful:', data);
+        navigate('/');
+      }
     } catch (error) {
-      console.error('Đăng nhập thất bại:', error);
-      toast.error(error.message || 'Login failed. Please try again.');
+      console.error('Login failed:', error);
+      if (error.status === 401) {
+        toast.error(error.message || 'Incorrect email or password.');
+      } else if (error.isVerificationError) {
+        toast.error('Please verify your email before logging in.');
+        navigate('/auth/check-email', { state: { email: loginEmail } });
+      } else {
+        toast.error(error.message || 'Login failed. Please try again.');
+      }
     } finally {
       setIsLoginLoading(false);
     }

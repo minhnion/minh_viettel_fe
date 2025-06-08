@@ -1,7 +1,6 @@
-// src/api/auth.js
 const API_BASE_URL = `${import.meta.env.VITE_SERVER_URL}/api`;
 
-// --- Hàm xử lý response chung ---
+// --- Common response handler ---
 const handleApiResponse = async (response) => {
   let data = {};
   try {
@@ -23,9 +22,9 @@ const handleApiResponse = async (response) => {
     } else if (data.message) {
       errorMessage = data.message;
     } else if (response.statusText) {
-       errorMessage = response.statusText;
+      errorMessage = response.statusText;
     } else {
-        errorMessage = `Error: ${response.status}`;
+      errorMessage = `Error: ${response.status}`;
     }
 
     const error = new Error(errorMessage);
@@ -33,17 +32,16 @@ const handleApiResponse = async (response) => {
     error.data = data;
 
     if (response.status === 401 && data.error === "Email not verified") {
-        error.isVerificationError = true;
+      error.isVerificationError = true;
     }
     throw error;
   }
 
   return data;
 };
-// --- Kết thúc hàm xử lý response ---
+// --- End common response handler ---
 
-
-// --- Các hàm gọi API ---
+// --- API call functions ---
 
 export const registerApi = async (userData) => {
   try {
@@ -51,13 +49,12 @@ export const registerApi = async (userData) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),
-      // credentials: 'include' KHÔNG cần thiết cho đăng ký nếu không cần gửi cookie nào
     });
     return handleApiResponse(response);
   } catch (error) {
     console.error("API Register Error:", error);
-     if (error instanceof TypeError) {
-        throw new Error('Connection error. Please check your network and CORS settings.');
+    if (error instanceof TypeError) {
+      throw new Error('Connection error. Please check your network and CORS settings.');
     }
     throw error;
   }
@@ -69,48 +66,96 @@ export const loginApi = async (credentials) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(credentials),
-      credentials: 'include', // <<<--- THÊM: Để trình duyệt nhận và lưu session cookie từ response
+      credentials: 'include', // To handle session cookies
     });
     return handleApiResponse(response);
   } catch (error) {
     console.error("API Login Error:", error);
-     if (error instanceof TypeError) {
-        throw new Error('Connection error. Please check your network and CORS settings.');
+    if (error instanceof TypeError) {
+      throw new Error('Connection error. Please check your network and CORS settings.');
     }
     throw error;
   }
 };
 
-// Hàm để lấy thông tin người dùng đã đăng nhập
-export const infoApi = async () => {
+export const infoApi = async (token) => {
   try {
     const response = await fetch(`${API_BASE_URL}/auth/info`, {
       method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include', // <<<--- THÊM: Để trình duyệt gửi session cookie
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` // Assuming token-based auth
+      },
+      credentials: 'include', // To send session cookie
     });
     return handleApiResponse(response);
   } catch (error) {
     console.error("API Info Error:", error);
-     if (error instanceof TypeError) {
-        throw new Error('Connection error. Please check your network and CORS settings.');
+    if (error instanceof TypeError) {
+      throw new Error('Connection error. Please check your network and CORS settings.');
     }
-     throw error;
+    throw error;
   }
 };
 
-export const logoutApi = async () => {
+export const logoutApi = async (token) => {
   try {
     const response = await fetch(`${API_BASE_URL}/auth/logout`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include', // <<<--- THÊM: Cần gửi session cookie để biết session nào cần hủy
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      credentials: 'include', // To invalidate session cookie
     });
     return handleApiResponse(response);
   } catch (error) {
     console.error("API Logout Error:", error);
-     if (error instanceof TypeError) {
-        throw new Error('Connection error. Please check your network.');
+    if (error instanceof TypeError) {
+      throw new Error('Connection error. Please check your network.');
+    }
+    throw error;
+  }
+};
+
+export const analyzeImageApi = async (file, token) => {
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await fetch(`${API_BASE_URL}/analyze-image/`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      body: formData,
+      credentials: 'include',
+    });
+    return handleApiResponse(response);
+  } catch (error) {
+    console.error("API Analyze Image Error:", error);
+    if (error instanceof TypeError) {
+      throw new Error('Connection error. Please check your network and CORS settings.');
+    }
+    throw error;
+  }
+};
+
+export const getHistoryApi = async (token) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/history`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      credentials: 'include',
+    });
+    return handleApiResponse(response);
+  } catch (error) {
+    console.error("API History Error:", error);
+    if (error instanceof TypeError) {
+      throw new Error('Connection error. Please check your network and CORS settings.');
     }
     throw error;
   }

@@ -1,27 +1,28 @@
-import React, { useState } from 'react';
-import '../components/Home/HomePage.scss';
-import { toast } from 'react-toastify'; 
+import React, { useState, useEffect } from 'react';
+import '../components/Home/HomePage.scss';import { toast } from 'react-toastify';
+import { analyzeImageApi, getHistoryApi, logoutApi } from '../api/index';
 
 // Component AnalysisItem
 const AnalysisItem = ({ analysis }) => {
   const getResultStyle = () => {
-    if (analysis.result.toLowerCase().includes('real')) {
-      return { color: '#28a745', icon: '✅', backgroundColor: '#e6ffe6' }; // Light green background for real
-    } else if (analysis.result.toLowerCase().includes('deepfake')) {
-      return { color: '#dc3545', icon: '❌', backgroundColor: '#ffe6e6' }; // Light red background for deepfake
+    if (analysis.result.prediction.toLowerCase().includes('real')) {
+      return { color: '#28a745', icon: '✅', backgroundColor: '#e6ffe6' };
+    } else if (analysis.result.prediction.toLowerCase().includes('fake')) {
+      return { color: '#dc3545', icon: '❌', backgroundColor: '#ffe6e6' };
     }
-    return { color: '#555', icon: 'ℹ️', backgroundColor: '#f0f0f0' }; // Neutral light gray for others
+    return { color: '#555', icon: 'ℹ️', backgroundColor: '#f0f0f0' };
   };
 
   const resultStyle = getResultStyle();
 
   return (
     <div className="analysis-item" style={{ backgroundColor: resultStyle.backgroundColor }}>
-      <img src={analysis.imageUrl} alt="Analyzed" className="analysis-image" />
+      <img src={analysis.storage_url} alt="Analyzed" className="analysis-image" />
       <p>
-        Result: <span style={{ color: resultStyle.color }}>{resultStyle.icon} {analysis.result}</span>
+        Result: <span style={{ color: resultStyle.color }}>{resultStyle.icon} {analysis.result.prediction}</span>
       </p>
-      <p>Time: {analysis.timestamp}</p>
+      <p>Confidence: {(analysis.result.confidence * 100).toFixed(2)}%</p>
+      <p>Time: {new Date(analysis.created_at).toLocaleString()}</p>
     </div>
   );
 };
@@ -41,7 +42,7 @@ const HistoryList = ({ history }) => {
 };
 
 // Component UploadForm
-const UploadForm = ({ onAnalysisComplete }) => {
+const UploadForm = ({ onAnalysisComplete, token }) => {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [result, setResult] = useState(null);
@@ -57,23 +58,22 @@ const UploadForm = ({ onAnalysisComplete }) => {
     reader.readAsDataURL(selectedFile);
   };
 
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
     if (!file) {
       toast.error('Please select a file first!');
       return;
     }
     setLoading(true);
-    setTimeout(() => {
-      const mockResult = {
-        imageUrl: preview,
-        result: 'Likely real',
-        timestamp: new Date().toLocaleString(),
-      };
-      setResult(mockResult);
-      onAnalysisComplete(mockResult);
+    try {
+      const response = await analyzeImageApi(file, token);
+      setResult(response);
+      onAnalysisComplete(response);
       toast.success('Analysis completed successfully!');
+    } catch (error) {
+      toast.error(error.message || 'Failed to analyze image.');
+    } finally {
       setLoading(false);
-    }, 2000);
+    }
   };
 
   return (
@@ -89,7 +89,8 @@ const UploadForm = ({ onAnalysisComplete }) => {
       </button>
       {result && (
         <div className="analysis-result">
-          <p>Result: {result.result}</p>
+          <p>Result: {result.prediction}</p>
+          <p>Confidence: {(result.confidence * 100).toFixed(2)}%</p>
         </div>
       )}
     </div>
@@ -100,7 +101,22 @@ const UploadForm = ({ onAnalysisComplete }) => {
 const MainLayout = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [analysisHistory, setAnalysisHistory] = useState([]);
+  const [token, setToken] = useState(localStorage.getItem('token') || '');
   const [logout, setLogout] = useState(false);
+
+  useEffect(() => {
+    const fetchHistory = async () => {
+      if (token) {
+        try {
+          const history = await getHistoryApi(token);
+          setAnalysisHistory(history);
+        } catch (error) {
+          toast.error(error.message || 'Failed to fetch history.');
+        }
+      }
+    };
+    fetchHistory();
+  }, [token]);
 
   const addToHistory = (result) => {
     setAnalysisHistory([result, ...analysisHistory]);
@@ -110,10 +126,19 @@ const MainLayout = () => {
     setShowHistory(!showHistory);
   };
 
-  const handleLogout = () => {
-    setLogout(true);
-    toast.success('Logged out successfully!');
-    // Add actual logout logic here
+  const handleLogout = async () => {
+    if (token) {
+      try {
+        await logoutApi(token);
+        setToken('');
+        localStorage.removeItem('token');
+        setAnalysisHistory([]);
+        setLogout(true);
+        toast.success('Logged out successfully!');
+      } catch (error) {
+        toast.error(error.message || 'Failed to logout.');
+      }
+    }
   };
 
   return (
@@ -127,7 +152,7 @@ const MainLayout = () => {
           <HistoryList history={analysisHistory} />
         </div>
         <div className="right-column">
-          <UploadForm onAnalysisComplete={addToHistory} />
+          <UploadForm onAnalysisComplete={addToHistory} token={token} />
         </div>
       </div>
       <div className="mobile-layout">
@@ -139,7 +164,7 @@ const MainLayout = () => {
         ) : (
           <div className="upload-view">
             <button onClick={toggleHistory}>History</button>
-            <UploadForm onAnalysisComplete={addToHistory} />
+            <UploadForm onAnalysisComplete={addToHistory} token={token} />
           </div>
         )}
       </div>
