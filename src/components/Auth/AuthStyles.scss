@@ -1,0 +1,439 @@
+@use "sass:color";
+@use '../../styles/variables' as *;
+
+.auth-layout-container {
+  display: flex;
+  justify-content: center; 
+  align-items: center;   
+  min-height: 100vh;
+  width: 100%;
+  padding: $spacing-lg;
+  background-color: $container-bg-color;
+}
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 768px;
+  max-width: 100%;
+  padding: $spacing-lg;
+  background: $secondary-color;
+  border-radius: $border-radius-form;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  position: relative;
+  overflow: hidden;
+  min-height: 480px;
+
+  .form-container {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    transition: all $transition-duration ease-in-out;
+
+    form {
+      background: $secondary-color;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 0 $spacing-xxl;
+      height: 100%;
+      text-align: center;
+
+      h1 {
+        font-weight: $font-weight-bold;
+        margin: 0 0 $spacing-md 0;
+        color: $text-color;
+        font-size: $font-size-h1;
+      }
+
+      span {
+        font-size: $font-size-small;
+        margin-bottom: $spacing-sm;
+      }
+
+      a {
+        color: $text-color;
+        font-size: $font-size-common;
+        text-decoration: none;
+        margin: $spacing-md 0;
+      }
+
+      input {
+        background-color: $input-bg-color;
+        border: 1px solid $input-border-color;
+        padding: 12px 40px 12px 15px;
+        margin: $spacing-xs 0;
+        width: 100%;
+        border-radius: $border-radius-input;
+        font-size: $font-size-base;
+
+        &.error-input {
+          border-color: $error-color;
+          &:focus {
+            box-shadow: 0 0 0 2px rgba($error-color, 0.2);
+          }
+        }
+
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+          box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+        }
+      }
+
+      button[type="submit"] {
+        border-radius: $border-radius-button-main;
+        background-color: $primary-color;
+        border: 1px solid $primary-color;
+        color: $secondary-color;
+        font-size: $font-size-small;
+        font-weight: $font-weight-bold;
+        padding: 12px 45px;
+        margin: $spacing-lg 0 $spacing-sm 0;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+
+      .resend-button {
+        margin-top: $spacing-sm;
+        background-color: $warning-color;
+        color: $warning-text-color;
+        border-color: $warning-color;
+        border-radius: $border-radius-button-main;
+        font-size: $font-size-small;
+        font-weight: $font-weight-bold;
+        padding: 10px 20px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        border: 1px solid $warning-color;
+
+        &:hover:not(:disabled) {
+          background-color: color.adjust($warning-color, $lightness: -10%);
+          border-color: color.adjust($warning-color, $lightness: -10%);
+        }
+      }
+
+      .input-error {
+        color: $error-color;
+        font-size: $font-size-small;
+        margin-top: -$spacing-xs;
+        margin-bottom: $spacing-sm;
+        text-align: left;
+        width: 100%;
+      }
+    }
+  }
+
+  .sign-in-container {
+    left: 0;
+    width: 50%;
+    z-index: $zindex-form-base;
+    opacity: 1;
+  }
+
+  .sign-up-container {
+    left: 0;
+    width: 50%;
+    opacity: 0;
+    z-index: $zindex-form-inactive;
+  }
+
+  &.right-panel-active {
+    .sign-in-container {
+      transform: translateX(100%);
+      opacity: 0;
+      z-index: $zindex-form-inactive;
+      animation: hideForm $transition-duration forwards;
+    }
+    .sign-up-container {
+      transform: translateX(100%);
+      opacity: 1;
+      z-index: $zindex-form-active;
+      animation: showForm $transition-duration forwards;
+    }
+    .overlay-container {
+      transform: translateX(-100%);
+    }
+    .overlay {
+      transform: translateX(50%);
+    }
+    .overlay-left {
+      transform: translateX(0);
+    }
+    .overlay-right {
+      transform: translateX(20%);
+    }
+  }
+
+  .overlay-container {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    transition: transform $transition-duration ease-in-out;
+    z-index: $zindex-overlay;
+  }
+
+  .overlay {
+    background: $overlay-gradient-start;
+    background: linear-gradient(to right, $overlay-gradient-end, $overlay-gradient-start);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 0 0;
+    color: $secondary-color;
+    position: relative;
+    left: -100%;
+    height: 100%;
+    width: 200%;
+    transform: translateX(0);
+    transition: transform $transition-duration ease-in-out;
+  }
+
+  .overlay-panel {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 $spacing-xxl;
+    text-align: center;
+    top: 0;
+    height: 100%;
+    width: 50%;
+    transform: translateX(0);
+    transition: transform $transition-duration ease-in-out;
+
+    h1 {
+      font-weight: $font-weight-bold;
+      margin: 0;
+      color: $secondary-color;
+      font-size: $font-size-h1;
+    }
+
+    p {
+      font-size: $font-size-common;
+      font-weight: 100;
+      line-height: 1.5;
+      letter-spacing: 0.5px;
+      margin: $spacing-lg 0 $spacing-xl 0;
+    }
+
+    button.ghost {
+      border-radius: $border-radius-button-main;
+      border: 1px solid $secondary-color;
+      background-color: transparent;
+      color: $secondary-color;
+      font-size: $font-size-small;
+      font-weight: $font-weight-bold;
+      padding: 12px 45px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+
+      &:hover {
+        background-color: rgba($secondary-color, 0.1);
+      }
+    }
+  }
+
+  .overlay-left {
+    transform: translateX(-20%);
+  }
+
+  .overlay-right {
+    right: 0;
+    transform: translateX(0);
+  }
+
+  .social-container {
+    margin: $spacing-lg 0;
+
+    a.social {
+      border: 1px solid $social-border-color;
+      border-radius: $border-radius-social;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 $spacing-xs;
+      height: 40px;
+      width: 40px;
+      font-size: 18px;
+      color: $text-color;
+      transition: background-color $transition-default, color $transition-default;
+
+      &:hover {
+        background-color: $input-bg-color;
+        color: $primary-color;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+.tab-container {
+  display: none;
+}
+
+.password-container {
+  position: relative;
+  width: 100%;
+
+  input {
+    background: $input-bg-color;
+    border: 1px solid $input-border-color;
+    padding: 12px 40px 12px 15px;
+    margin: $spacing-xs 0;
+    width: 100%;
+    border-radius: $border-radius-input;
+    font-size: $font-size-base;
+
+    &.error-input {
+      border-color: $error-color;
+      &:focus {
+        box-shadow: 0 0 0 2px rgba($error-color, 0.2);
+      }
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+    }
+  }
+
+  .toggle-password {
+    position: absolute;
+    right: $spacing-md;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 18px;
+    color: #666;
+    transition: color $transition-default;
+    line-height: 1;
+
+    &:hover {
+      color: $primary-color;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .auth-container {
+    flex-direction: column;
+    max-width: 100%;
+    border-radius: 0;
+    box-shadow: none;
+
+    .tab-container {
+      display: flex;
+    }
+
+    .form-wrapper {
+      .form-container {
+        width: 100%;
+        position: static;
+
+        &.hide {
+          display: none;
+        }
+      }
+    }
+
+    .overlay-container {
+      display: none;
+    }
+
+    &.right-panel-active {
+      .sign-in-container {
+        display: none;
+      }
+      .sign-up-container {
+        display: block;
+      }
+    }
+  }
+
+  .tab-container {
+    display: flex;
+    width: 100%;
+    background: $secondary-color;
+    border-bottom: 1px solid $input-border-color;
+
+    .tab {
+      flex: 1;
+      padding: $spacing-md;
+      font-size: $font-size-base;
+      font-weight: $font-weight-bold;
+      text-align: center;
+      background: transparent;
+      border: none;
+      color: $text-muted-color;
+      cursor: pointer;
+      transition: color 0.3s ease, background-color 0.3s ease;
+
+      &.active {
+        color: $primary-color;
+        background: color.adjust($secondary-color, $lightness: -5%);
+        border-bottom: 2px solid $primary-color;
+      }
+
+      &:hover:not(.active) {
+        color: color.adjust($primary-color, $lightness: -10%);
+      }
+    }
+  }
+}
+
+@media (max-width: $breakpoint-medium) {
+  .auth-container {
+    width: 95%;
+    min-height: auto;
+    margin: $spacing-lg 0;
+    box-shadow: none;
+
+    .form-container {
+      position: relative;
+      width: 100%;
+      opacity: 1 !important;
+      transform: none !important;
+      z-index: 1 !important;
+      animation: none !important;
+      height: auto;
+      padding: $spacing-xl 0;
+    }
+
+    .sign-up-container {
+      margin-top: $spacing-lg;
+      border-top: 1px solid $input-bg-color;
+      padding-top: $spacing-xl;
+    }
+
+    .overlay-container {
+      display: none;
+    }
+
+    form {
+      padding: 0 $spacing-lg;
+    }
+  }
+}
+
+@keyframes showForm {
+  0%, 49.99% { opacity: 0; z-index: $zindex-form-inactive; }
+  50%, 100% { opacity: 1; z-index: $zindex-form-active; }
+}
+
+@keyframes hideForm {
+  0%, 49.99% { opacity: 1; z-index: $zindex-form-base; }
+  50%, 100% { opacity: 0; z-index: $zindex-form-inactive; }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

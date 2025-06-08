@@ -1,0 +1,77 @@
+// src/styles/_variables.scss
+@use "sass:color";
+// Colors
+$primary-color: #0056b3;
+$secondary-color: #FFFFFF;
+$container-bg-color: #EFF6FC;
+$text-color: #333;
+$text-muted-color: #555; // Thêm màu cho text phụ
+$input-bg-color: #eee;
+$input-border-color: #ccc;
+$link-color: $primary-color; // Mặc định link dùng màu chính
+$social-border-color: #DDDDDD;
+$success-color: #28a745;
+$error-color: #dc3545;
+$warning-color: #ffc107; // Màu cho nút resend
+$warning-text-color: #212529;
+
+$hover-bg-color: #f0f0f0;
+
+// Gradients
+$overlay-gradient-start: color.adjust($primary-color, $lightness: -10%);// Điều chỉnh gradient
+$overlay-gradient-end: $primary-color;
+
+// Typography
+$font-family-base: 'Montserrat', sans-serif;
+$font-size-common: 14px;
+$font-size-base: 14px; // Font size chung
+$font-size-small: 12px; // Font size nhỏ hơn
+$font-size-large: 16px; // Font size lớn hơn
+$font-size-medium: 14px;
+$font-size-tiny: 10px;
+$font-size-h1: 2.2em;    // Ví dụ size cho h1 trong form
+$font-size-h2: 1.75em; // Ví dụ size cho h2 trong form
+$font-weight-bold: 700;
+$font-weight-medium: 600;
+$font-weight-normal: 400;
+$line-height-base: 1.6;
+
+// Borders & Radius
+$border-radius-form: 10px;
+$border-radius-button-main: 20px;
+$border-radius-button-common: 5px;
+$border-radius-input: 5px;
+$border-radius-popup: 10px;
+$border-radius-social: 50%;
+$border-radius-md: 10px;
+$border-radius-sm: 5px;
+$border-radius-lg: 1px;
+
+// Transitions & Animations
+$transition-duration: 0.6s;
+$transition-short: 80ms;
+$transition-default: 0.3s ease;
+$transition-fast: 0.2s;
+
+// Spacing (Ví dụ)
+$spacing-xs: 5px;
+$spacing-sm: 10px;
+$spacing-md: 15px;
+$spacing-lg: 20px;
+$spacing-xl: 30px;
+$spacing-xxl: 40px;
+$spacing-n-xs: 10px;
+
+// Breakpoints (Ví dụ)
+$breakpoint-medium: 768px;
+
+// Z-indexes (Ví dụ)
+$zindex-popup: 1000;
+$zindex-overlay: 100;
+$zindex-form-active: 5;
+$zindex-form-inactive: 1;
+$zindex-form-base: 2; // Cho sign-in ban đầu
+
+$navbar-height-mobile: 50px;
+$sidebar-width-desktop: 96px;
+$navbar-height-mobile: 65px;

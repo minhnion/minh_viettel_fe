@@ -1,0 +1,78 @@
+// src/styles/_base.scss
+@use 'variables' as *; // Cần biến để sử dụng
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: $font-family-base;
+  line-height: $line-height-base;
+  background-color: $container-bg-color;
+  color: $text-color;
+  min-height: 100svh;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: $link-color;
+  text-decoration: none;
+  font-weight: 500;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: $spacing-md;
+    font-weight: $font-weight-bold;
+}
+
+// Style button RẤT CƠ BẢN - sẽ được ghi đè chi tiết hơn trong component/form
+button {
+  cursor: pointer;
+  font-family: inherit;
+  border: 1px solid transparent;
+  padding: $spacing-sm $spacing-lg;
+  font-size: $font-size-base;
+  font-weight: 500;
+  transition: background-color $transition-default, border-color $transition-default, transform $transition-short ease-in;
+
+  &:focus {
+      outline: none;
+  }
+   &:active {
+     transform: scale(0.95);
+   }
+
+  &:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+  }
+}
+
+// Style input RẤT CƠ BẢN
+input {
+  font-family: inherit;
+  font-size: $font-size-base;
+  border-radius: $border-radius-input;
+  border: 1px solid $input-border-color;
+  padding: $spacing-sm $spacing-md;
+  margin: $spacing-xs 0;
+  width: 100%;
+
+  &:focus {
+     outline: none;
+     border-color: $primary-color;
+     box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+  }
+}

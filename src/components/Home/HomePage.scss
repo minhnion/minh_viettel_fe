@@ -1,0 +1,340 @@
+@use 'sass:color';
+@use '../../styles/variables' as *;
+
+.main-layout {
+  padding: $spacing-lg;
+  background: linear-gradient(135deg, $container-bg-color, color.adjust($container-bg-color, $lightness: -10%));
+  min-height: 100vh;
+  font-family: $font-family-base;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: $primary-color;
+    color: $secondary-color;
+    padding: $spacing-md;
+    border-radius: $border-radius-md;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: $spacing-lg;
+
+    h1 {
+      font-size: $font-size-h1;
+      font-weight: $font-weight-bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .logout-btn {
+      background: $error-color;
+      color: $secondary-color;
+      border: none;
+      padding: $spacing-sm $spacing-md;
+      border-radius: $border-radius-button-main;
+      cursor: pointer;
+      transition: background $transition-default, transform $transition-default;
+
+      &:hover {
+        background: color.adjust($error-color, $lightness: -10%);
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  .desktop-layout {
+    display: grid;
+    grid-template-columns: 1fr 2fr; // 1/3 for left-column, 2/3 for right-column
+    gap: $spacing-lg;
+    height: calc(100vh - #{$navbar-height-mobile} - #{$spacing-lg} * 2);
+
+    .left-column {
+      background: $secondary-color;
+      padding: $spacing-md;
+      border-radius: $border-radius-md;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+
+      .history-list {
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-sm;
+
+        p {
+          color: $text-muted-color;
+          text-align: center;
+          font-size: $font-size-medium;
+        }
+
+        .analysis-item {
+          border: 1px solid $input-border-color;
+          padding: $spacing-sm;
+          border-radius: $border-radius-sm;
+          background: $input-bg-color;
+          transition: background $transition-default;
+
+          &:hover {
+            background: $hover-bg-color;
+          }
+
+          .analysis-image {
+            max-width: 120px;
+            margin-bottom: $spacing-xs;
+            border-radius: $border-radius-sm;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          }
+
+          p {
+            margin: $spacing-xs 0;
+            color: $text-color;
+            font-size: $font-size-base;
+          }
+        }
+      }
+    }
+
+    .right-column {
+      .upload-form {
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-md;
+        padding: $spacing-md;
+        background: $secondary-color;
+        border-radius: $border-radius-md;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: transform $transition-default;
+
+        &:hover {
+          transform: translateY(-5px);
+        }
+
+        input[type="file"] {
+          padding: $spacing-sm;
+          border: 1px solid $input-border-color;
+          border-radius: $border-radius-input;
+          background: $input-bg-color;
+          transition: border-color $transition-default;
+
+          &:focus {
+            border-color: $primary-color;
+            outline: none;
+          }
+        }
+
+        .preview-frame {
+          width: 100%;
+          height: 400px;
+          overflow: hidden;
+          border: 1px solid $input-border-color;
+          border-radius: $border-radius-sm;
+          margin-bottom: $spacing-md;
+
+          .preview-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; // Maintains aspect ratio within frame
+          }
+        }
+
+        button {
+          padding: $spacing-sm $spacing-lg;
+          border: none;
+          border-radius: $border-radius-button-main;
+          cursor: pointer;
+          font-weight: $font-weight-bold;
+          transition: background $transition-default, transform $transition-default;
+          background: $success-color; // Colored Analyze button
+
+          &:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+          }
+
+          &:hover {
+            transform: scale(1.05);
+          }
+
+          &:first-child {
+            background: $success-color;
+
+            &:hover {
+              background: color.adjust($success-color, $lightness: -10%);
+            }
+          }
+        }
+
+        .analysis-result {
+          margin-top: $spacing-md;
+          padding: $spacing-sm;
+          background: $success-color;
+          color: $secondary-color;
+          border-radius: $border-radius-md;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+          p {
+            margin: 0;
+            font-size: $font-size-base;
+          }
+        }
+      }
+    }
+  }
+
+  .mobile-layout {
+    .upload-view,
+    .history-view {
+      padding: $spacing-md;
+      background: $secondary-color;
+      border-radius: $border-radius-md;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+      button {
+        background: $primary-color;
+        color: $secondary-color;
+        border: none;
+        padding: $spacing-sm $spacing-md;
+        border-radius: $border-radius-button-main;
+        cursor: pointer;
+        margin-bottom: $spacing-md;
+        transition: background $transition-default;
+
+        &:hover {
+          background: color.adjust($primary-color, $lightness: -10%);
+        }
+      }
+
+      .upload-form {
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-md;
+
+        input[type="file"] {
+          padding: $spacing-sm;
+          border: 1px solid $input-border-color;
+          border-radius: $border-radius-input;
+          background: $input-bg-color;
+          transition: border-color $transition-default;
+
+          &:focus {
+            border-color: $primary-color;
+            outline: none;
+          }
+        }
+
+        .preview-frame {
+          width: 100%;
+          height: 300px;
+          overflow: hidden;
+          border: 1px solid $input-border-color;
+          border-radius: $border-radius-sm;
+          margin-bottom: $spacing-md;
+
+          .preview-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; // Maintains aspect ratio within frame
+          }
+        }
+
+        button {
+          padding: $spacing-sm $spacing-lg;
+          border: none;
+          border-radius: $border-radius-button-main;
+          cursor: pointer;
+          font-weight: $font-weight-bold;
+          transition: background $transition-default, transform $transition-default;
+          background: $success-color; // Colored Analyze button
+
+          &:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+          }
+
+          &:hover {
+            transform: scale(1.05);
+          }
+
+          &:first-child {
+            background: $success-color;
+
+            &:hover {
+              background: color.adjust($success-color, $lightness: -10%);
+            }
+          }
+        }
+
+        .analysis-result {
+          margin-top: $spacing-md;
+          padding: $spacing-sm;
+          background: $success-color;
+          color: $secondary-color;
+          border-radius: $border-radius-md;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+          p {
+            margin: 0;
+            font-size: $font-size-base;
+          }
+        }
+      }
+
+      .history-list {
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-sm;
+
+        p {
+          color: $text-muted-color;
+          text-align: center;
+        }
+
+        .analysis-item {
+          border: 1px solid $input-border-color;
+          padding: $spacing-sm;
+          border-radius: $border-radius-sm;
+          background: $input-bg-color;
+          transition: background $transition-default;
+
+          &:hover {
+            background: $hover-bg-color;
+          }
+
+          .analysis-image {
+            max-width: 100px;
+            margin-bottom: $spacing-xs;
+            border-radius: $border-radius-sm;
+          }
+
+          p {
+            margin: $spacing-xs 0;
+            color: $text-color;
+            font-size: $font-size-base;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: $breakpoint-medium) {
+    .desktop-layout {
+      display: none;
+    }
+
+    .mobile-layout {
+      display: block;
+    }
+  }
+
+  @media (min-width: $breakpoint-medium) {
+    .desktop-layout {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: $spacing-lg;
+    }
+
+    .mobile-layout {
+      display: none;
+    }
+  }
+}

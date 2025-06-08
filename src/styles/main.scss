@@ -1,0 +1,10 @@
+// src/styles/main.scss
+
+// 1. Variables & Mixins
+@use 'variables' as *;
+// @import 'mixins'; // Nếu có
+
+// 2. Base styles
+@use 'base' as *;
+
+@use '../components/Auth/AuthStyles' as *;
