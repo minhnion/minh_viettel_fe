@@ -13,6 +13,13 @@ const MainLayout = () => {
   const [logout, setLogout] = useState(false);
 
   useEffect(() => {
+    // Check if token exists on mount
+    if (!token) {
+      toast.error('Please log in to access the application.');
+      window.location.href = '/auth'; // Redirect to login page
+      return;
+    }
+
     const fetchHistory = async () => {
       if (token) {
         try {
@@ -36,21 +43,23 @@ const MainLayout = () => {
     setShowHistory(!showHistory);
   };
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     if (token) {
-      try {
-        await logoutApi(token);
+      if (window.confirm('Are you sure you want to log out?')) {
         setToken('');
         localStorage.removeItem('token');
         setAnalysisHistory([]);
         setLogout(true);
         toast.success('Logged out successfully!');
-      } catch (error) {
-        console.error('Logout Error:', error);
-        toast.error(error.message || 'Failed to logout.');
+        window.location.href = '/auth';
       }
     }
   };
+
+  // Render nothing if not logged in (redirect handled in useEffect)
+  if (!token) {
+    return null; // Prevents rendering until redirect completes
+  }
 
   return (
     <div className="main-layout">

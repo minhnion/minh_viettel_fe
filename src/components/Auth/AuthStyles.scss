@@ -5,7 +5,7 @@
   display: flex;
   justify-content: center; 
   align-items: center;   
-  min-height: 100vh;
+  min-height: 100svh;
   width: 100%;
   padding: $spacing-lg;
   background-color: $container-bg-color;
@@ -15,7 +15,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 100svh;
   width: 768px;
   max-width: 100%;
   padding: $spacing-lg;

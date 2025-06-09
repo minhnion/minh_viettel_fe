@@ -4,7 +4,7 @@
 .main-layout {
   padding: $spacing-lg;
   background: linear-gradient(135deg, $container-bg-color, color.adjust($container-bg-color, $lightness: -10%));
-  min-height: 100vh;
+  min-height: 100svh;
   font-family: $font-family-base;
 
   .header {
@@ -45,7 +45,7 @@
     display: grid;
     grid-template-columns: 1fr 2fr; // 1/3 for left-column, 2/3 for right-column
     gap: $spacing-lg;
-    height: calc(100vh - #{$navbar-height-mobile} - #{$spacing-lg} * 2);
+    height: calc(100svh - #{$navbar-height-mobile} - #{$spacing-lg} * 2);
 
     .left-column {
       background: $secondary-color;
@@ -74,6 +74,7 @@
           border-radius: $border-radius-sm;
           background: $input-bg-color;
           transition: background $transition-default;
+          justify-content: space-evenly;
 
           &:hover {
             background: $hover-bg-color;
@@ -114,10 +115,6 @@
         border-radius: $border-radius-md;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         transition: transform $transition-default;
-
-        &:hover {
-          transform: translateY(-5px);
-        }
 
         input[type="file"] {
           padding: $spacing-sm;
@@ -163,7 +160,7 @@
           }
 
           &:hover {
-            transform: scale(1.05);
+            transform: scale(0.98);
           }
         }
 
