@@ -1,4 +1,4 @@
-const API_BASE_URL = `${import.meta.env.VITE_SERVER_URL}/api`;
+const API_BASE_URL = `${import.meta.env.VITE_SERVER_URL}`;
 
 // --- Common response handler ---
 const handleApiResponse = async (response) => {
@@ -45,7 +45,7 @@ const handleApiResponse = async (response) => {
 
 export const registerApi = async (userData) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/register`, {
+    const response = await fetch(`${API_BASE_URL}/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),
@@ -62,10 +62,17 @@ export const registerApi = async (userData) => {
 
 export const loginApi = async (credentials) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+    const formData = new URLSearchParams();
+    formData.append('username', credentials.email);
+    formData.append('password', credentials.password);
+    formData.append('grant_type', 'password'); 
+
+    const response = await fetch(`${API_BASE_URL}/token`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(credentials),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: formData,
       credentials: 'include', // To handle session cookies
     });
     return handleApiResponse(response);
@@ -80,7 +87,7 @@ export const loginApi = async (credentials) => {
 
 export const infoApi = async (token) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/info`, {
+    const response = await fetch(`${API_BASE_URL}/info`, {
       method: 'GET',
       headers: { 
         'Content-Type': 'application/json',
@@ -100,7 +107,7 @@ export const infoApi = async (token) => {
 
 export const logoutApi = async (token) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/logout`, {
+    const response = await fetch(`${API_BASE_URL}/logout`, {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',

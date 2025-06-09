@@ -66,6 +66,9 @@
         }
 
         .analysis-item {
+          display: flex;
+          align-items: center;
+          gap: $spacing-md;
           border: 1px solid $input-border-color;
           padding: $spacing-sm;
           border-radius: $border-radius-sm;
@@ -76,17 +79,26 @@
             background: $hover-bg-color;
           }
 
+          .analysis-content {
+            display: flex;
+            align-items: center;
+            gap: $spacing-md;
+          }
+
           .analysis-image {
             max-width: 120px;
-            margin-bottom: $spacing-xs;
             border-radius: $border-radius-sm;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
           }
 
-          p {
-            margin: $spacing-xs 0;
-            color: $text-color;
-            font-size: $font-size-base;
+          .analysis-details {
+            flex-grow: 1;
+
+            p {
+              margin: $spacing-xs 0;
+              color: $text-color;
+              font-size: $font-size-base;
+            }
           }
         }
       }
@@ -131,18 +143,18 @@
           .preview-image {
             width: 100%;
             height: 100%;
-            object-fit: contain; // Maintains aspect ratio within frame
+            object-fit: contain;
           }
         }
 
         button {
           padding: $spacing-sm $spacing-lg;
           border: none;
-          border-radius: $border-radius-button-main;
+          border-radius: $border-radius-sm; // Reduced border-radius
           cursor: pointer;
           font-weight: $font-weight-bold;
           transition: background $transition-default, transform $transition-default;
-          background: $success-color; // Colored Analyze button
+          background: $primary-color; // Changed to primary-color
 
           &:disabled {
             background: #ccc;
@@ -153,21 +165,11 @@
           &:hover {
             transform: scale(1.05);
           }
-
-          &:first-child {
-            background: $success-color;
-
-            &:hover {
-              background: color.adjust($success-color, $lightness: -10%);
-            }
-          }
         }
 
         .analysis-result {
           margin-top: $spacing-md;
           padding: $spacing-sm;
-          background: $success-color;
-          color: $secondary-color;
           border-radius: $border-radius-md;
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
@@ -232,18 +234,18 @@
           .preview-image {
             width: 100%;
             height: 100%;
-            object-fit: contain; // Maintains aspect ratio within frame
+            object-fit: contain;
           }
         }
 
         button {
           padding: $spacing-sm $spacing-lg;
           border: none;
-          border-radius: $border-radius-button-main;
+          border-radius: $border-radius-sm; // Reduced border-radius
           cursor: pointer;
           font-weight: $font-weight-bold;
           transition: background $transition-default, transform $transition-default;
-          background: $success-color; // Colored Analyze button
+          background: $primary-color; // Changed to primary-color
 
           &:disabled {
             background: #ccc;
@@ -254,21 +256,11 @@
           &:hover {
             transform: scale(1.05);
           }
-
-          &:first-child {
-            background: $success-color;
-
-            &:hover {
-              background: color.adjust($success-color, $lightness: -10%);
-            }
-          }
         }
 
         .analysis-result {
           margin-top: $spacing-md;
           padding: $spacing-sm;
-          background: $success-color;
-          color: $secondary-color;
           border-radius: $border-radius-md;
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
@@ -290,6 +282,9 @@
         }
 
         .analysis-item {
+          display: flex;
+          flex-direction: column; // Stacked on mobile
+          gap: $spacing-md;
           border: 1px solid $input-border-color;
           padding: $spacing-sm;
           border-radius: $border-radius-sm;
@@ -300,16 +295,23 @@
             background: $hover-bg-color;
           }
 
+          .analysis-content {
+            display: flex;
+            flex-direction: column;
+            gap: $spacing-md;
+          }
+
           .analysis-image {
             max-width: 100px;
-            margin-bottom: $spacing-xs;
             border-radius: $border-radius-sm;
           }
 
-          p {
-            margin: $spacing-xs 0;
-            color: $text-color;
-            font-size: $font-size-base;
+          .analysis-details {
+            p {
+              margin: $spacing-xs 0;
+              color: $text-color;
+              font-size: $font-size-base;
+            }
           }
         }
       }
@@ -335,6 +337,14 @@
 
     .mobile-layout {
       display: none;
+    }
+
+    .history-list .analysis-item {
+      flex-direction: row; // Horizontal on desktop
+    }
+
+    .history-list .analysis-item .analysis-content {
+      flex-direction: row;
     }
   }
 }

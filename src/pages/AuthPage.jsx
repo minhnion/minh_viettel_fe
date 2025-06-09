@@ -64,9 +64,8 @@ const AuthPage = () => {
       };
       const data = await registerApi(userData);
 
-      toast.success('Registration successful! Please check your email to verify your account.');
+      toast.success('Registration successful!');
       console.log('Registration successful:', data);
-      navigate('/auth/check-email', { state: { email: registerEmail } });
     } catch (error) {
       console.error('Registration failed:', error);
       if (error.status === 400) {
